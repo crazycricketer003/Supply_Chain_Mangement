@@ -1,11 +1,16 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
 
+    const [email, setEmail] = useState("");
     const navigate = new useNavigate();
 
-    const nav_dashboard = () => {
-        navigate("/dashboard");
+    const verify_cred = () => {
+
+        // Code to verify the provided credentials. Since we don't have a database, I'm skipping that step.
+
+        navigate("/dashboard", {state: { email }});
     }
 
     return (
@@ -17,8 +22,8 @@ export default function LoginPage() {
                         By logging in, you accept our{' '}
                         <a className="text-blue-500 hover:text-blue-700">
                             terms
-                        </a>{' '}
-                        and{' '}
+                        </a>
+                        {' '}and{' '}
                         <a className="text-blue-500 hover:text-blue-700">
                             privacy policy
                         </a>
@@ -38,9 +43,10 @@ export default function LoginPage() {
                             className="flex h-10 w-full border-zinc-200 dark:border-zinc-700 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             id="email"
                             placeholder="john.doe@domain.com"
-                            required=""
+                            autoComplete="off"
+                            onChange={(text) => setEmail(text.target.value)}
                         />
-                        <button onClick={() => { nav_dashboard(); }} className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full bg-gradient-to-tr text-white">
+                        <button onClick={() => { verify_cred(); }} className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full bg-gradient-to-tr text-white">
                             <div className="flex items-center justify-center">
                                 <div className="flex items-center justify-center">
                                     Login
@@ -53,7 +59,7 @@ export default function LoginPage() {
                         <span className="text-zinc-200 dark:text-zinc-700 text-sm">OR</span>
                         <hr className="flex-grow border-zinc-200 dark:border-zinc-700" />
                     </div>
-                    <button onClick={() => { nav_dashboard(); }} className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full bg-[#4285F4] text-white">
+                    <button onClick={() => { verify_cred(); }} className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full bg-[#4285F4] text-white">
                         <div className="flex items-center justify-center">
                             <div className="flex items-center justify-center">
                                 <svg
@@ -77,7 +83,7 @@ export default function LoginPage() {
                             </div>
                         </div>
                     </button>
-                    <button onClick={() => { nav_dashboard(); }} className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full bg-black text-white">
+                    <button onClick={() => { verify_cred(); }} className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full bg-black text-white">
                         <div className="flex items-center justify-center">
                             <svg
                                 width="24"

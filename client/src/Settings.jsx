@@ -1,30 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 import "./components/Order.jsx";
 import Order from './components/Order.jsx';
 
-export default function Dashboard() {
+export default function Settings() {
 
-    const [orders, setOrders] = new useState([]);
-    const [user, setUser] = new useState("");
-    const navigate = useNavigate();
-    const location = useLocation();
-
-    const fetch_orders = async () => {
-        const response = await fetch("http://localhost:3000/api/get-orders");
-        const data = await response.json();
-
-        setOrders(data);
-    }
-
-    useEffect(() => {
-        if(location.state.email === "") navigate("/auth/login");
-        else {
-            setUser(location.state.email.split("@")[1].split(".")[0]);
-            fetch_orders();
-        }
-    }, []);
+    
 
     return (
         <div className="grid min-h-screen w-full overflow-hidden lg:grid-cols-[280px_1fr]">
@@ -53,8 +34,8 @@ export default function Dashboard() {
                     </div>
                     <div className="flex-1 ">
                         <nav className="grid items-start px-4 text-sm font-medium">
-                        <a
-                                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 "
+                            <a
+                                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all dark:text-gray-400 "
                                 href="/dashboard"
                                 rel="ugc"
                             >
@@ -70,16 +51,14 @@ export default function Dashboard() {
                                     strokeLinejoin="round"
                                     className="h-4 w-4"
                                 >
-                                    <path d="m7.5 4.27 9 5.15"></path>
-                                    <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path>
-                                    <path d="m3.3 7 8.7 5 8.7-5"></path>
-                                    <path d="M12 22V12"></path>
+                                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
                                 </svg>
                                 Dashboard
                             </a>
                             <a
                                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 "
-                                href="/inventory"
+                                href="/products"
                                 rel="ugc"
                             >
                                 <svg
@@ -99,7 +78,7 @@ export default function Dashboard() {
                                     <path d="m3.3 7 8.7 5 8.7-5"></path>
                                     <path d="M12 22V12"></path>
                                 </svg>
-                                Inventory
+                                Products
                             </a>
                             <a
                                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 "
@@ -173,52 +152,10 @@ export default function Dashboard() {
                         <span className="sr-only">Home</span>
                     </a>
                     <div className="flex-1">
-                        <h1 className="font-semibold text-lg text-white">Shipments</h1>
+                        <h1 className="font-semibold text-lg text-white">Settings</h1>
                     </div>
                 </header>
-                <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-                    <div className="bg-white p-6 space-y-6 border border-gray-200 dark:border-gray-700 border shadow-sm rounded-lg p-2">
-                        <div className="relative w-full overflow-auto">
-                            <table className="w-full caption-bottom text-sm">
-                                <thead className="[&amp;_tr]:border-b">
-                                    <tr className="border-b transition-colors border-gray-200 dark:border-gray-700 hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-[100px]">
-                                            Order ID
-                                        </th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                                            Load Number
-                                        </th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                                            Shipper
-                                        </th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                                            Receiver
-                                        </th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                                            Date
-                                        </th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                                            Item
-                                        </th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                                            Carrier
-                                        </th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                                            Est. Time Left
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="[&amp;_tr:last-child]:border-0">
-                                    { 
-                                        orders.map((order, key) => 
-                                            <Order {...order} key={key}/>
-                                        )
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </main>
+                
             </div>
         </div>
     )
