@@ -59,7 +59,7 @@ app
             user
         }
 
-        await writeFile("./records/user.json", JSON.stringify(current_user, null, 2), "utf-8");
+        await writeFile("./records/user.json", JSON.stringify(current_user, null, 4), "utf-8");
         return res.json({ "status": "success" });
     })
 
@@ -94,7 +94,7 @@ app
         }
         orders.push(order);
 
-        await writeFile("./records/orders.json", JSON.stringify(orders, null, 2), "utf-8");
+        await writeFile("./records/orders.json", JSON.stringify(orders, null, 4), "utf-8");
         return res.json({ "status": "success" });
     })
 
@@ -122,7 +122,7 @@ app
         }
         orders.push(order);
 
-        await writeFile("./records/items.json", JSON.stringify(orders, null, 2), "utf-8");
+        await writeFile("./records/items.json", JSON.stringify(orders, null, 4), "utf-8");
         return res.json({ "status": "success" });
     })
 

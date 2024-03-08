@@ -10,7 +10,7 @@ const OrderForm = () => {
     const [estimated, setEstimated] = useState("");
     const navigate = useNavigate();
 
-    const add_item = async () => {
+    const add_order = async () => {
         const response = await fetch("http://localhost:3000/api/add-order?shipper="+ shipper +"&receiver=" + receiver + "&item=" + item + "&carrier=" + carrier + "&estimated=" + estimated, {
             method: "POST"
         });
@@ -74,7 +74,7 @@ const OrderForm = () => {
                             className="flex h-10 w-full border-zinc-200 dark:border-zinc-700 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             onChange={(text) => setEstimated(text.target.value)}
                         />
-                        <button onClick={() => { add_item(); }} className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full bg-gradient-to-tr text-white">
+                        <button onClick={() => { add_order(); }} className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full bg-gradient-to-tr text-white">
                             <div className="flex items-center justify-center">
                                 <div className="flex items-center justify-center">
                                     Add

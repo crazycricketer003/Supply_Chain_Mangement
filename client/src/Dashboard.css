@@ -5,7 +5,12 @@
     flex-wrap: wrap;
 }
 
-.add-order {
-    height: 25px;
+.imp-csv {
+    order: 1;
     margin-left: auto;
+}
+
+.add-order {
+    order: 2;
+    margin-left: 20px;
 }

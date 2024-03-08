@@ -12,7 +12,12 @@
     flex-wrap: wrap;
 }
 
-.add-item {
-    height: 25px;
+.imp-csv {
+    order: 1;
     margin-left: auto;
+}
+
+.add-item {
+    order: 2;
+    margin-left: 20px;
 }

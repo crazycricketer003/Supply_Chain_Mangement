@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Order from './components/Order.jsx';
@@ -7,8 +7,10 @@ import "./Dashboard.css";
 
 export default function Dashboard() {
 
-    const [user, setUser] = new useState("");
-    const [orders, setOrders] = new useState([]);
+    const [user, setUser] = useState("");
+    const [orders, setOrders] = useState([]);
+    const [reset, setReset] = useState(1);
+    const fileInputRef = useRef();
     const navigate = useNavigate();
 
     const fetch_current_user = async () => {
@@ -25,10 +27,50 @@ export default function Dashboard() {
         setOrders(data);
     }
 
+    const add_order = async (shipper, receiver, item, carrier, estimated) => {
+        const response = await fetch("http://localhost:3000/api/add-order?shipper="+ shipper +"&receiver=" + receiver + "&item=" + item + "&carrier=" + carrier + "&estimated=" + estimated, {
+            method: "POST"
+        });
+        
+        const data = await response.json();
+
+        return data;
+    }
+
+    const import_csv = (event) => {
+        const file = event.target.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = async (e) => {
+                const csvData = e.target.result;
+
+                let lines = csvData.split("\r\n");
+                lines = lines.slice(1, -1);
+
+                for (const line of lines) {
+                    const order = line.split(";");
+                    const response = await add_order(...order);
+
+                    if(response.status === "success") {
+                        setReset((reset + 1) % 10);
+                    } else {
+                        break;
+                    }
+                }
+            };
+
+            reader.readAsText(file);
+        } else {
+            console.error("No file selected");
+        }
+    }
+
     useEffect(() => {
         fetch_current_user();
         fetch_orders();
-    }, []);
+    }, [reset]);
 
     return (
         <div className="grid min-h-screen w-full overflow-hidden lg:grid-cols-[280px_1fr]">
@@ -176,6 +218,11 @@ export default function Dashboard() {
                     </a>
                     <div className="dash">
                         <h1 className="font-semibold text-lg text-white">Shipments</h1>
+                        <button onClick={() => fileInputRef.current.click()} className="imp-csv inline-flex w-100 items-center justify-center rounded-md bg-blue-600 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-700 disabled:pointer-events-none disabled:opacity-50 dark:bg-blue-500 dark:text-white dark:hover:text-black dark:hover:bg-blue-50/90 dark:focus-visible:ring-gray-300"
+                            rel="ugc">
+                            Import CSV
+                        </button>
+                        <input onChange={import_csv} multiple={false} ref={fileInputRef} type='file' hidden/>
                         <a className="add-order inline-flex w-100 items-center justify-center rounded-md bg-blue-600 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-700 disabled:pointer-events-none disabled:opacity-50 dark:bg-blue-500 dark:text-white dark:hover:text-black dark:hover:bg-blue-50/90 dark:focus-visible:ring-gray-300"
                             href="/add-order" 
                             rel="ugc">

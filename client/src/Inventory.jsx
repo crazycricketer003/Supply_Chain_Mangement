@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import Item from './components/Item.jsx';
 
@@ -7,6 +7,8 @@ import "./Inventory.css";
 export default function Products() {
 
     const [items, setItems] = useState([]);
+    const [reset, setReset] = useState(1);
+    const fileInputRef = useRef();
 
     const fetch_items = async () => {
         const response = await fetch("http://localhost:3000/api/get-items");
@@ -15,9 +17,49 @@ export default function Products() {
         setItems(data);
     }
 
+    const add_item = async (name, code, quantity, reorder, cost) => {
+        const response = await fetch("http://localhost:3000/api/add-item?itemName="+ name +"&itemCode=" + code + "&quantity=" + quantity + "&reorder=" + reorder + "&cost=" + cost, {
+            method: "POST"
+        });
+
+        const data = await response.json();
+
+        return data;
+    }
+
+    const import_csv = (event) => {
+        const file = event.target.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = async (e) => {
+                const csvData = e.target.result;
+
+                let lines = csvData.split("\r\n");
+                lines = lines.slice(1, -1);
+
+                for (const line of lines) {
+                    const item = line.split(";");
+                    const response = await add_item(...item);
+
+                    if(response.status === "success") {
+                        setReset((reset + 1) % 10);
+                    } else {
+                        break;
+                    }
+                }
+            };
+
+            reader.readAsText(file);
+        } else {
+            console.error("No file selected");
+        }
+    }
+
     useEffect(() => {
         fetch_items();
-    }, []);
+    }, [reset]);
 
     return (
         <div className="grid min-h-screen w-full overflow-hidden lg:grid-cols-[280px_1fr]">
@@ -165,6 +207,11 @@ export default function Products() {
                     </a>
                     <div className="head">
                         <h1 className="font-semibold text-lg text-white">Inventory</h1>
+                        <button onClick={() => fileInputRef.current.click()} className="imp-csv inline-flex w-100 items-center justify-center rounded-md bg-blue-600 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-700 disabled:pointer-events-none disabled:opacity-50 dark:bg-blue-500 dark:text-white dark:hover:text-black dark:hover:bg-blue-50/90 dark:focus-visible:ring-gray-300"
+                            rel="ugc">
+                            Import CSV
+                        </button>
+                        <input onChange={import_csv} multiple={false} ref={fileInputRef} type='file' hidden/>
                         <a className="add-item inline-flex w-100 items-center justify-center rounded-md bg-blue-600 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-700 disabled:pointer-events-none disabled:opacity-50 dark:bg-blue-500 dark:text-white dark:hover:text-black dark:hover:bg-blue-50/90 dark:focus-visible:ring-gray-300"
                             href="/add-item" 
                             rel="ugc">
