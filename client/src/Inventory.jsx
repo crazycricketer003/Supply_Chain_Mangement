@@ -217,36 +217,34 @@ export default function Products() {
                     </a>
                     <div className="dash">
                         <div className='heading'>
-                        <h1 className="font-semibold text-lg text-white">Shipments</h1>
+                            <h1 className="font-semibold text-lg text-white">Inventory</h1>
                         </div>
                         <div className='body'>
 
-                        <button onClick={() => fileInputRef.current.click()} className="btn btn-primary"
-                            rel="ugc">
-                            Import CSV
-                        </button>
-                        <input onChange={import_csv} multiple={false} ref={fileInputRef} type='file' hidden />
-                        <a className="btn btn-primary"
-                            href="/add-order"
-                            rel="ugc">
-                            Add Order
-                        </a>
+                            <button onClick={() => fileInputRef.current.click()} className="btn btn-primary" id='imp-csv'
+                                rel="ugc">
+                                Import CSV
+                            </button>
+                            <input onChange={import_csv} multiple={false} ref={fileInputRef} type='file' hidden />
+                            <a className="btn btn-primary" id='add-item'
+                                href="/add-item"
+                                rel="ugc">
+                                Add Item
+                            </a>
 
+                            <Dropdown id='filter-btn'>
+                                <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                                Filter
+                                </Dropdown.Toggle>
 
-
-                        <Dropdown>
-                            <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                               Filter
-                            </Dropdown.Toggle>
-
-                            <Dropdown.Menu>
-                                <Dropdown.Item  className="text-light" href="#" >Date</Dropdown.Item>
-                                <Dropdown.Item  className="text-light" href="#">Another action</Dropdown.Item>
-                                <Dropdown.Item  className="text-light" href="#">Something else here</Dropdown.Item>
-                                {/* <Dropdown.Divider />
-                                <Dropdown.Item href="#">Separated link</Dropdown.Item> */}
-                            </Dropdown.Menu>
-                        </Dropdown>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item  className="text-light" href="#" >Date</Dropdown.Item>
+                                    <Dropdown.Item  className="text-light" href="#">Another action</Dropdown.Item>
+                                    <Dropdown.Item  className="text-light" href="#">Something else here</Dropdown.Item>
+                                    {/* <Dropdown.Divider />
+                                    <Dropdown.Item href="#">Separated link</Dropdown.Item> */}
+                                </Dropdown.Menu>
+                            </Dropdown>
                         </div>
                     </div>
                 </header>

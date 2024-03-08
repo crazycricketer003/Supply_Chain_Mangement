@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 
-import "./components/Order.jsx";
 import Order from './components/Order.jsx';
 
 export default function Settings() {
@@ -34,8 +33,8 @@ export default function Settings() {
                     </div>
                     <div className="flex-1 ">
                         <nav className="grid items-start px-4 text-sm font-medium">
-                            <a
-                                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all dark:text-gray-400 "
+                        <a
+                                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 "
                                 href="/dashboard"
                                 rel="ugc"
                             >
@@ -58,7 +57,7 @@ export default function Settings() {
                             </a>
                             <a
                                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 "
-                                href="/products"
+                                href="/inventory"
                                 rel="ugc"
                             >
                                 <svg
@@ -78,7 +77,7 @@ export default function Settings() {
                                     <path d="m3.3 7 8.7 5 8.7-5"></path>
                                     <path d="M12 22V12"></path>
                                 </svg>
-                                Products
+                                Inventory
                             </a>
                             <a
                                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 "

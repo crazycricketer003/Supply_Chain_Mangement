@@ -259,12 +259,9 @@ export default function Dashboard() {
                                 href="/"
                                 rel="ugc"
                             >
-
                                 <FontAwesomeIcon icon={faSignOutAlt} style={{ fontSize: '12px', marginLeft: '5px' }} /> Logout
                             </a>
                         </nav>
-
-
                     </div>
                 </div>
             </div>
@@ -295,20 +292,18 @@ export default function Dashboard() {
                         </div>
                         <div className='body'>
 
-                            <button onClick={() => fileInputRef.current.click()} className="btn btn-primary"
+                            <button onClick={() => fileInputRef.current.click()} className="btn btn-primary" id='imp-csv'
                                 rel="ugc">
                                 Import CSV
                             </button>
                             <input onChange={import_csv} multiple={false} ref={fileInputRef} type='file' hidden />
-                            <a className="btn btn-primary"
+                            <a className="btn btn-primary" id='add-order'
                                 href="/add-order"
                                 rel="ugc">
                                 Add Order
                             </a>
 
-
-
-                            <Dropdown>
+                            <Dropdown id='filter-btn'>
                                 <Dropdown.Toggle variant="primary" id="dropdown-basic">
                                     Filter
                                 </Dropdown.Toggle>
@@ -380,7 +375,7 @@ export default function Dashboard() {
                                 <thead className="[&amp;_tr]:border-b">
                                     <tr className="border-b transition-colors border-gray-200 dark:border-gray-700 hover:bg-muted/50 data-[state=selected]:bg-muted">
                                         <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-[100px]">
-                                            Order ID
+                                            OrderID
                                         </th>
                                         <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                                             Load Number
