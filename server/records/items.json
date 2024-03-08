@@ -1,18 +1,18 @@
 [
-    {
-        "shipper": "amazon",
-        "itemName": "Apple iPhone 14 Pro Max",
-        "itemCode": "IPHN14PM256BLK",
-        "quantity": "125",
-        "reorder": "50",
-        "cost": "$1099.99"
-    },
-    {
-        "shipper": "amazon",
-        "itemName": "Instant Pot Electric Air Fryer",
-        "itemCode": "INSTPOTDUOCRISP",
-        "quantity": "75",
-        "reorder": "20",
-        "cost": "$149.95"
-    }
+  {
+    "shipper": "amazon",
+    "itemName": "Apple iPhone 14 Pro Max",
+    "itemCode": "IPHN14PM256BLK",
+    "quantity": "125",
+    "reorder": "50",
+    "cost": "$1099.99"
+  },
+  {
+    "shipper": "amazon",
+    "itemName": "Instant Pot Electric Air Fryer",
+    "itemCode": "INSTPOTDUOCRISP",
+    "quantity": "75",
+    "reorder": "20",
+    "cost": "$149.95"
+  }
 ]

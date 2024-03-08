@@ -1,18 +1,11 @@
-.inv {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 10px;
-}
-
-.head {
+.dash {
     width: 100%;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
 }
 
-.add-item {
+.add-order {
     height: 25px;
     margin-left: auto;
 }

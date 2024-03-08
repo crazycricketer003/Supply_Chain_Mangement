@@ -1,15 +1,22 @@
 import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import "./components/Order.jsx";
 import Order from './components/Order.jsx';
+
+import "./Dashboard.css";
 
 export default function Dashboard() {
 
-    const [orders, setOrders] = new useState([]);
     const [user, setUser] = new useState("");
+    const [orders, setOrders] = new useState([]);
     const navigate = useNavigate();
-    const location = useLocation();
+
+    const fetch_current_user = async () => {
+        const response = await fetch("http://localhost:3000/api/get-orders");
+        const data = await response.json();
+
+        setUser(data);
+    }
 
     const fetch_orders = async () => {
         const response = await fetch("http://localhost:3000/api/get-orders");
@@ -19,11 +26,8 @@ export default function Dashboard() {
     }
 
     useEffect(() => {
-        if(location.state.email === "") navigate("/auth/login");
-        else {
-            setUser(location.state.email.split("@")[1].split(".")[0]);
-            fetch_orders();
-        }
+        fetch_current_user();
+        fetch_orders();
     }, []);
 
     return (
@@ -70,10 +74,8 @@ export default function Dashboard() {
                                     strokeLinejoin="round"
                                     className="h-4 w-4"
                                 >
-                                    <path d="m7.5 4.27 9 5.15"></path>
-                                    <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path>
-                                    <path d="m3.3 7 8.7 5 8.7-5"></path>
-                                    <path d="M12 22V12"></path>
+                                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
                                 </svg>
                                 Dashboard
                             </a>
@@ -172,8 +174,13 @@ export default function Dashboard() {
                         </svg>
                         <span className="sr-only">Home</span>
                     </a>
-                    <div className="flex-1">
+                    <div className="dash">
                         <h1 className="font-semibold text-lg text-white">Shipments</h1>
+                        <a className="add-order inline-flex w-100 items-center justify-center rounded-md bg-blue-600 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-700 disabled:pointer-events-none disabled:opacity-50 dark:bg-blue-500 dark:text-white dark:hover:text-black dark:hover:bg-blue-50/90 dark:focus-visible:ring-gray-300"
+                            href="/add-order" 
+                            rel="ugc">
+                            Add Order
+                        </a>
                     </div>
                 </header>
                 <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">

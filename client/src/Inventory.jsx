@@ -47,7 +47,7 @@ export default function Products() {
                     <div className="flex-1 ">
                         <nav className="grid items-start px-4 text-sm font-medium">
                             <a
-                                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all dark:text-gray-400 "
+                                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 "
                                 href="/dashboard"
                                 rel="ugc"
                             >
@@ -163,8 +163,13 @@ export default function Products() {
                         </svg>
                         <span className="sr-only">Home</span>
                     </a>
-                    <div className="flex-1">
+                    <div className="head">
                         <h1 className="font-semibold text-lg text-white">Inventory</h1>
+                        <a className="add-item inline-flex w-100 items-center justify-center rounded-md bg-blue-600 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-700 disabled:pointer-events-none disabled:opacity-50 dark:bg-blue-500 dark:text-white dark:hover:text-black dark:hover:bg-blue-50/90 dark:focus-visible:ring-gray-300"
+                            href="/add-item" 
+                            rel="ugc">
+                            Add Item
+                        </a>
                     </div>
                 </header>
                 <main className="inv">

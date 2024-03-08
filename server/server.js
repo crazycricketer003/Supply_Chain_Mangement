@@ -5,6 +5,10 @@ import { readFile, writeFile } from "fs/promises";
 const app = express();
 
 // Utility Functions
+const get_current_user = async () => {
+    return await readFile("./records/user.json", "utf-8");
+}
+
 const get_orders = async () => {
     return await readFile("./records/orders.json", "utf-8");
 }
@@ -35,6 +39,10 @@ app
         return res.json([{ "hello": "world!" }]);
     })
 
+    .get("/api/get-current-user", async (req, res) => {
+        return res.json(JSON.parse(await get_current_user()));
+    })
+
     .get("/api/get-orders", async (req, res) => {
         return res.json(JSON.parse(await get_orders()));
     })
@@ -44,6 +52,17 @@ app
     })
 
     // POST Requests
+    .post("/api/set-current-user", async (req, res) => {
+        const user = req.query.user;
+
+        const current_user = {
+            user
+        }
+
+        await writeFile("./records/user.json", JSON.stringify(current_user, null, 2), "utf-8");
+        return res.json({ "status": "success" });
+    })
+
     .post("/api/add-order", async (req, res) => {
         const shipper = req.query.shipper;
         const receiver = req.query.receiver;
@@ -76,7 +95,7 @@ app
         orders.push(order);
 
         await writeFile("./records/orders.json", JSON.stringify(orders, null, 2), "utf-8");
-        return;
+        return res.json({ "status": "success" });
     })
 
     .post("/api/add-item", async (req, res) => {
@@ -104,7 +123,7 @@ app
         orders.push(order);
 
         await writeFile("./records/items.json", JSON.stringify(orders, null, 2), "utf-8");
-        return;
+        return res.json({ "status": "success" });
     })
 
 app.listen(3000, () => {

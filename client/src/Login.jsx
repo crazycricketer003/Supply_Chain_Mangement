@@ -6,11 +6,19 @@ export default function LoginPage() {
     const [email, setEmail] = useState("");
     const navigate = new useNavigate();
 
-    const verify_cred = () => {
+    const verify_cred = async () => {
 
-        // Code to verify the provided credentials. Since we don't have a database, I'm skipping that step.
+        email.split("@")[1].split(".")[0]
+        const response = await fetch("http://localhost:3000/api/set-current-user?user=" + email.split("@")[1].split(".")[0], {
+            method: "POST"
+        });
 
-        navigate("/dashboard", {state: { email }});
+        const data = await response.json();
+
+        if(data.status === "success")
+            navigate("/dashboard");
+        else
+            navigate("/auth/login");
     }
 
     return (
