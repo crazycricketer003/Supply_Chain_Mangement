@@ -3,7 +3,9 @@ import { useState, useEffect, useRef } from 'react';
 import Item from './components/Item.jsx';
 
 import "./Inventory.css";
-
+import { Dropdown } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 export default function Products() {
 
     const [items, setItems] = useState([]);
@@ -180,6 +182,14 @@ export default function Products() {
                                 </svg>
                                 Settings
                             </a>
+                            <a
+                                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400"
+                                href="/"
+                                rel="ugc"
+                            >
+                              
+                            <FontAwesomeIcon icon={faSignOutAlt} style={{ fontSize: '12px', marginLeft: '5px' }} /> Logout
+                            </a>
                         </nav>
                     </div>
                 </div>
@@ -205,18 +215,39 @@ export default function Products() {
                         </svg>
                         <span className="sr-only">Home</span>
                     </a>
-                    <div className="head">
-                        <h1 className="font-semibold text-lg text-white">Inventory</h1>
-                        <button onClick={() => fileInputRef.current.click()} className="imp-csv inline-flex w-100 items-center justify-center rounded-md bg-blue-600 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-700 disabled:pointer-events-none disabled:opacity-50 dark:bg-blue-500 dark:text-white dark:hover:text-black dark:hover:bg-blue-50/90 dark:focus-visible:ring-gray-300"
+                    <div className="dash">
+                        <div className='heading'>
+                        <h1 className="font-semibold text-lg text-white">Shipments</h1>
+                        </div>
+                        <div className='body'>
+
+                        <button onClick={() => fileInputRef.current.click()} className="btn btn-primary"
                             rel="ugc">
                             Import CSV
                         </button>
-                        <input onChange={import_csv} multiple={false} ref={fileInputRef} type='file' hidden/>
-                        <a className="add-item inline-flex w-100 items-center justify-center rounded-md bg-blue-600 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-700 disabled:pointer-events-none disabled:opacity-50 dark:bg-blue-500 dark:text-white dark:hover:text-black dark:hover:bg-blue-50/90 dark:focus-visible:ring-gray-300"
-                            href="/add-item" 
+                        <input onChange={import_csv} multiple={false} ref={fileInputRef} type='file' hidden />
+                        <a className="btn btn-primary"
+                            href="/add-order"
                             rel="ugc">
-                            Add Item
+                            Add Order
                         </a>
+
+
+
+                        <Dropdown>
+                            <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                               Filter
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                                <Dropdown.Item  className="text-light" href="#" >Date</Dropdown.Item>
+                                <Dropdown.Item  className="text-light" href="#">Another action</Dropdown.Item>
+                                <Dropdown.Item  className="text-light" href="#">Something else here</Dropdown.Item>
+                                {/* <Dropdown.Divider />
+                                <Dropdown.Item href="#">Separated link</Dropdown.Item> */}
+                            </Dropdown.Menu>
+                        </Dropdown>
+                        </div>
                     </div>
                 </header>
                 <main className="inv">

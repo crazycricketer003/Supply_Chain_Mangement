@@ -1,9 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Dropdown } from 'react-bootstrap';
 
 import Order from './components/Order.jsx';
 
 import "./Dashboard.css";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 export default function Dashboard() {
 
@@ -12,6 +17,15 @@ export default function Dashboard() {
     const [reset, setReset] = useState(1);
     const fileInputRef = useRef();
     const navigate = useNavigate();
+    const [isOpen, setIsOpen] = useState(false);
+
+    const [startDate, setStartDate] = useState(null); // State for the selected date
+
+    const handleDateChange = (date) => {
+        setStartDate(date);
+        // You can add additional logic here if needed
+    };
+
 
     const fetch_current_user = async () => {
         const response = await fetch("http://localhost:3000/api/get-orders");
@@ -19,19 +33,67 @@ export default function Dashboard() {
 
         setUser(data);
     }
+    const [selectedShipper, setSelectedShipper] = useState([]);
+    const [selectedReceiver, setSelectedReceiver] = useState([]);
+    const [allData, setAllData] = useState([]);
 
     const fetch_orders = async () => {
-        const response = await fetch("http://localhost:3000/api/get-orders");
-        const data = await response.json();
+        try {
+            const response = await fetch("http://localhost:3000/api/get-orders");
+            const data = await response.json();
+            setAllData(data);
+            const date = new Date(startDate);
+            const formattedDate = date.toLocaleDateString("en-GB"); // "dd/mm/yyyy" format
+            let filteredData;
 
-        setOrders(data);
-    }
+            if (formattedDate === '01/01/1970' && selectedShipper.length === 0 && selectedReceiver.length === 0) {
+                filteredData = data; // No valid date or shipper selected, set filteredData to all orders
+            } else {
+                filteredData = data.filter(order => {
+                    // Apply date, shipper, and receiver filters
+                    const matchesDate = formattedDate === '01/01/1970' || order.date === formattedDate;
+                    const matchesShipper = selectedShipper.length === 0 || selectedShipper.includes(order.shipper);
+                    const matchesReceiver = selectedReceiver.length === 0 || selectedReceiver.includes(order.receiver);
+                    return matchesDate && matchesShipper && matchesReceiver;
+                });
+            }
 
+            setOrders(filteredData);
+            console.log(filteredData);
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+        }
+    };
+
+    const handleShipperToggle = (shipper) => {
+        if (selectedShipper.includes(shipper)) {
+            // Shipper is already selected, remove it
+            setSelectedShipper(selectedShipper.filter(item => item !== shipper));
+        } else {
+            // Shipper is not selected, add it
+            setSelectedShipper([...selectedShipper, shipper]);
+        }
+    };
+    
+    const handleReceiverToggle = (receiver) => {
+        if (selectedReceiver.includes(receiver)) {
+            // Receiver is already selected, remove it
+            setSelectedReceiver(selectedReceiver.filter(item => item !== receiver));
+        } else {
+            // Receiver is not selected, add it
+            setSelectedReceiver([...selectedReceiver, receiver]);
+        }
+    };
+    
+
+    useEffect(() => {
+        fetch_orders();
+    }, [startDate, selectedShipper, selectedReceiver]);
     const add_order = async (shipper, receiver, item, carrier, estimated) => {
-        const response = await fetch("http://localhost:3000/api/add-order?shipper="+ shipper +"&receiver=" + receiver + "&item=" + item + "&carrier=" + carrier + "&estimated=" + estimated, {
+        const response = await fetch("http://localhost:3000/api/add-order?shipper=" + shipper + "&receiver=" + receiver + "&item=" + item + "&carrier=" + carrier + "&estimated=" + estimated, {
             method: "POST"
         });
-        
+
         const data = await response.json();
 
         return data;
@@ -53,7 +115,7 @@ export default function Dashboard() {
                     const order = line.split(";");
                     const response = await add_order(...order);
 
-                    if(response.status === "success") {
+                    if (response.status === "success") {
                         setReset((reset + 1) % 10);
                     } else {
                         break;
@@ -74,6 +136,7 @@ export default function Dashboard() {
 
     return (
         <div className="grid min-h-screen w-full overflow-hidden lg:grid-cols-[280px_1fr]">
+
             <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-white-800/40">
                 <div className="flex flex-col gap-2">
                     <div className="flex h-[60px] items-center px-6">
@@ -99,7 +162,7 @@ export default function Dashboard() {
                     </div>
                     <div className="flex-1 ">
                         <nav className="grid items-start px-4 text-sm font-medium">
-                        <a
+                            <a
                                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 "
                                 href="/dashboard"
                                 rel="ugc"
@@ -191,7 +254,17 @@ export default function Dashboard() {
                                 </svg>
                                 Settings
                             </a>
+                            <a
+                                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400"
+                                href="/"
+                                rel="ugc"
+                            >
+
+                                <FontAwesomeIcon icon={faSignOutAlt} style={{ fontSize: '12px', marginLeft: '5px' }} /> Logout
+                            </a>
                         </nav>
+
+
                     </div>
                 </div>
             </div>
@@ -217,17 +290,87 @@ export default function Dashboard() {
                         <span className="sr-only">Home</span>
                     </a>
                     <div className="dash">
-                        <h1 className="font-semibold text-lg text-white">Shipments</h1>
-                        <button onClick={() => fileInputRef.current.click()} className="imp-csv inline-flex w-100 items-center justify-center rounded-md bg-blue-600 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-700 disabled:pointer-events-none disabled:opacity-50 dark:bg-blue-500 dark:text-white dark:hover:text-black dark:hover:bg-blue-50/90 dark:focus-visible:ring-gray-300"
-                            rel="ugc">
-                            Import CSV
-                        </button>
-                        <input onChange={import_csv} multiple={false} ref={fileInputRef} type='file' hidden/>
-                        <a className="add-order inline-flex w-100 items-center justify-center rounded-md bg-blue-600 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-700 disabled:pointer-events-none disabled:opacity-50 dark:bg-blue-500 dark:text-white dark:hover:text-black dark:hover:bg-blue-50/90 dark:focus-visible:ring-gray-300"
-                            href="/add-order" 
-                            rel="ugc">
-                            Add Order
-                        </a>
+                        <div className='heading'>
+                            <h1 className="font-semibold text-lg text-white">Shipments</h1>
+                        </div>
+                        <div className='body'>
+
+                            <button onClick={() => fileInputRef.current.click()} className="btn btn-primary"
+                                rel="ugc">
+                                Import CSV
+                            </button>
+                            <input onChange={import_csv} multiple={false} ref={fileInputRef} type='file' hidden />
+                            <a className="btn btn-primary"
+                                href="/add-order"
+                                rel="ugc">
+                                Add Order
+                            </a>
+
+
+
+                            <Dropdown>
+                                <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                                    Filter
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu className="dropdown-menu-dark">
+                                    <Dropdown className="text-light-head">
+                                        Date
+                                    </Dropdown>
+                                    <DatePicker
+                                        selected={startDate}
+                                        onChange={handleDateChange}
+                                        className="date-picker"
+                                        dateFormat="MM/dd/yyyy"
+                                        placeholderText="Select Date"
+                                        showMonthDropdown
+                                        showYearDropdown
+                                        dropdownMode="select"
+                                    />
+                                    <Dropdown className="text-light-head">
+                                        <Dropdown.Toggle variant="text" id="shipper-dropdown" className='text-light'>
+                                            Shipper
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu className="dropdown-menu-dark">
+                                            {Array.from(new Set(allData.map(shipper => shipper.shipper))).map((shipper, index) => (
+                                                <Dropdown.Item key={index} className='hover-item'>
+                                                    <input
+                                                        type="checkbox"
+                                                        id={`shipper-${index}`}
+                                                        className="mr-2"
+                                                        checked={selectedShipper.includes(shipper)}
+                                                        onChange={() => handleShipperToggle(shipper)}
+                                                        onClick={(e) => e.stopPropagation()} // Stop event propagation
+                                                    />
+                                                    <label htmlFor={`shipper-${index}`} className="text-lig">{shipper}</label>
+                                                </Dropdown.Item>
+                                            ))}
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                    <Dropdown className="text-light-head">
+                                        <Dropdown.Toggle variant="text" id="receiver-dropdown" className='text-light'>
+                                            Receiver
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu className="dropdown-menu-dark">
+                                            {Array.from(new Set(allData.map(shipper => shipper.receiver))).map((receiver, index) => (
+                                                <Dropdown.Item key={index} className='hover-item'>
+                                                    <input
+                                                        type="checkbox"
+                                                        id={`receiver-${index}`}
+                                                        className="mr-2"
+                                                        checked={selectedReceiver.includes(receiver)}
+                                                        onChange={() => handleReceiverToggle(receiver)}
+
+                                                        onClick={(e) => e.stopPropagation()} // Stop event propagation
+                                                    />
+                                                    <label htmlFor={`receiver-${index}`} className="text-light">{receiver}</label>
+                                                </Dropdown.Item>
+                                            ))}
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </Dropdown.Menu>
+                            </Dropdown>
+
+                        </div>
                     </div>
                 </header>
                 <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
@@ -263,9 +406,9 @@ export default function Dashboard() {
                                     </tr>
                                 </thead>
                                 <tbody className="[&amp;_tr:last-child]:border-0">
-                                    { 
-                                        orders.map((order, key) => 
-                                            <Order {...order} key={key}/>
+                                    {
+                                        orders.map((order, key) =>
+                                            <Order {...order} key={key} />
                                         )
                                     }
                                 </tbody>
@@ -274,6 +417,7 @@ export default function Dashboard() {
                     </div>
                 </main>
             </div>
+
         </div>
     )
 }
